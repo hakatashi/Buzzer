@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: '/',
+			url: './',
 			data: $(this).serialize(),
 			timeout: 10000,
 			beforeSend: function () {
