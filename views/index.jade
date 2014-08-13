@@ -6,6 +6,9 @@ block content
 	if quiz
 		h1= quiz.title
 		p= quiz.text
+		form(id='form', method='POST')
+			input(type='text', name='answer', placeholder='answer')
+			button Submit
 	else
 		p No quiz here! Please wait until game start.
 

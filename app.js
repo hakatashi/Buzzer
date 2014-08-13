@@ -12,6 +12,7 @@ var fs = require('fs');
 var config = require('./config');
 
 var quizNumber = null;
+var quizAnswer = null;
 
 /***** Setup passport *****/
 
@@ -75,18 +76,34 @@ app.use(serveStatic('assets', {
 
 app.get('/', authenticatedOnly, function (req, res) {
 	if (quizNumber === null) {
-		res.render('index', {user: req.user});
+		res.render('index', {
+			user: req.user,
+			scripts: ['index.js']
+		});
 	} else {
 		var quizFile = 'quizes/' + quizNumber + '/quiz.cson';
 
 		CSON.parseFile(quizFile, function (error, quiz) {
 			res.render('index', {
 				user: req.user,
-				quiz: quiz
+				quiz: quiz,
+				scripts: ['index.js']
 			});
 		});
 	}
 });
+
+app.post('/', authenticatedOnly, function (req, res) {
+	if (quizAnswer === null) {
+		res.send('error');
+	} else {
+		if (quizAnswer === req.body.answer) {
+			res.send('ok');
+		} else {
+			res.send('ng');
+		}
+	}
+})
 
 app.get('/admin', adminOnly, function (req, res) {
 	fs.readdir('quizes', function (error, files) {
@@ -101,6 +118,14 @@ app.post('/admin', adminOnly, function (req, res) {
 	quizNumber = req.body.quizNumber;
 
 	console.log('Quiz number set to ' + quizNumber);
+
+	var quizFile = 'quizes/' + quizNumber + '/quiz.cson';
+
+	CSON.parseFile(quizFile, function (error, quiz) {
+		quizAnswer = quiz.answer;
+	});
+
+	res.send('ok');
 });
 
 app.get('/account', authenticatedOnly, function (req, res) {

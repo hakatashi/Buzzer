@@ -2,6 +2,6 @@ title: 'Sanity check'
 text: """
 とりあえず'Hello, world!'と書いて送信してみてください。
 """
-answer: "11"
+answer: "Hello, world!"
 files: [
 ]
