@@ -1,6 +1,6 @@
 var config = {};
 
-config.hostname = '127.0.0.1';
+config.hostname = 'http://127.0.0.1:8888/';
 config.port = 8888;
 config.sessionSecret = 'secret';
 
