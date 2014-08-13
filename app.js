@@ -139,9 +139,9 @@ app.get('/login', function (req, res) {
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback', passport.authenticate('twitter', {
-	failureRedirect: '/login'
+	failureRedirect: config.hostname + 'login'
 }), function (req, res) {
-	res.redirect('/');
+	res.redirect(config.hostname);
 });
 
 /***** Start Server *****/
