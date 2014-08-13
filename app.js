@@ -7,10 +7,11 @@ var serveStatic = require('serve-static');
 var passport = require('passport');
 var passportTwitter = require('passport-twitter');
 var CSON = require('cson');
+var fs = require('fs');
 
 var config = require('./config');
 
-var quizNumber = 1;
+var quizNumber = null;
 
 /***** Setup passport *****/
 
@@ -38,7 +39,14 @@ var authenticatedOnly = function (req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
-	res.redirect('/login')
+	res.redirect('/login');
+};
+
+var adminOnly = function (req, res, next) {
+	if (req.isAuthenticated() && req.user.username === config.admin) {
+		return next();
+	}
+	res.redirect('/');
 };
 
 /***** Setup express.js *****/
@@ -78,6 +86,21 @@ app.get('/', authenticatedOnly, function (req, res) {
 			});
 		});
 	}
+});
+
+app.get('/admin', adminOnly, function (req, res) {
+	fs.readdir('quizes', function (error, files) {
+		res.render('admin', {
+			scripts: ['admin.js'],
+			quizes: files
+		});
+	});
+});
+
+app.post('/admin', adminOnly, function (req, res) {
+	quizNumber = req.body.quizNumber;
+
+	console.log('Quiz number set to ' + quizNumber);
 });
 
 app.get('/account', authenticatedOnly, function (req, res) {

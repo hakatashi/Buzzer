@@ -8,4 +8,6 @@ config.sessionSecret = 'secret';
 config.consumerKey = 'xxxxxxxxxxxxxxxxxxxxxxxxx';
 config.consumerSecret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
+config.admin = 'hakatashi';
+
 module.exports = config;
