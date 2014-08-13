@@ -1,7 +1,7 @@
 $(document).ready(function () {
 	$('button').click(function () {
 		var quizNumber = $(this).text();
-		$.post('/admin', {
+		$.post('./admin', {
 			quizNumber: quizNumber
 		});
 	});
