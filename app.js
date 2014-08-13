@@ -40,14 +40,14 @@ var authenticatedOnly = function (req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
-	res.redirect('/login');
+	res.redirect(config.hostname + 'login');
 };
 
 var adminOnly = function (req, res, next) {
 	if (req.isAuthenticated() && req.user.username === config.admin) {
 		return next();
 	}
-	res.redirect('/');
+	res.redirect(config.hostname);
 };
 
 /***** Setup express.js *****/
