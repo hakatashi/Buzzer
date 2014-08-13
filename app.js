@@ -22,7 +22,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new passportTwitter.Strategy({
 		consumerKey: config.consumerKey,
 		consumerSecret: config.consumerSecret,
-		callbackURL: "http://127.0.0.1:8888/auth/twitter/callback"
+		callbackURL: "http://" + config.hostname + ":" + config.port + "/auth/twitter/callback"
 	},
 	function(token, tokenSecret, profile, done) {
 		process.nextTick(function () {
