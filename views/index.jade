@@ -1,7 +1,10 @@
 extends layout
 
 block content
-	if user
-		h2 Hello, #{user.username}
+	p You are now logged in as #{user.username}.
+
+	if quiz
+		h1= quiz.title
+		p= quiz.text
 	else
-		h2 Please log in.
+		p No quiz here! Please wait until game start.

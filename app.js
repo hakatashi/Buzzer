@@ -6,8 +6,11 @@ var flash = require('connect-flash');
 var serveStatic = require('serve-static');
 var passport = require('passport');
 var passportTwitter = require('passport-twitter');
+var CSON = require('cson');
 
 var config = require('./config');
+
+var quizNumber = 1;
 
 /***** Setup passport *****/
 
@@ -22,7 +25,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new passportTwitter.Strategy({
 		consumerKey: config.consumerKey,
 		consumerSecret: config.consumerSecret,
-		callbackURL: "http://" + config.hostname + ":" + config.port + "/auth/twitter/callback"
+		callbackURL: 'http://' + config.hostname + ':' + config.port + '/auth/twitter/callback'
 	},
 	function(token, tokenSecret, profile, done) {
 		process.nextTick(function () {
@@ -32,7 +35,9 @@ passport.use(new passportTwitter.Strategy({
 ));
 
 var authenticatedOnly = function (req, res, next) {
-	if (req.isAuthenticated()) { return next(); }
+	if (req.isAuthenticated()) {
+		return next();
+	}
 	res.redirect('/login')
 };
 
@@ -58,30 +63,40 @@ app.use(serveStatic('assets', {
 	redirect: false
 }));
 
-/** routes **/
+/***** routes *****/
 
 app.get('/', authenticatedOnly, function (req, res) {
-	res.render('index', {user: req.user});
+	if (quizNumber === null) {
+		res.render('index', {user: req.user});
+	} else {
+		var quizFile = 'quizes/' + quizNumber + '/quiz.cson';
+
+		CSON.parseFile(quizFile, function (error, quiz) {
+			res.render('index', {
+				user: req.user,
+				quiz: quiz
+			});
+		});
+	}
 });
 
-app.get('/account', authenticatedOnly, function(req, res){
+app.get('/account', authenticatedOnly, function (req, res) {
 	res.render('account', {user: req.user});
 });
 
-app.get('/login', function(req, res){
+app.get('/login', function (req, res) {
 	res.render('login', {user: req.user});
 });
 
-app.get('/auth/twitter', passport.authenticate('twitter'), function (req, res) {
-	// The request will be redirected to Twitter for authentication, so this
-	// function will not be called.
-});
+app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback', passport.authenticate('twitter', {
 	failureRedirect: '/login'
 }), function (req, res) {
 	res.redirect('/');
 });
+
+/***** Start Server *****/
 
 var server = app.listen(config.port, function () {
 	console.log('Listening on port %d', server.address().port);
