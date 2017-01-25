@@ -1,6 +1,8 @@
 Buzzer
 ======
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/hakatashi/Buzzer.svg)](https://greenkeeper.io/)
+
 Buzzer quiz for npca 2014
 
 ## Beep the Buzzer
